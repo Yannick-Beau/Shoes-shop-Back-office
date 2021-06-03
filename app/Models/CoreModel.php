@@ -44,7 +44,7 @@ class CoreModel {
      *
      * @return  string
      */ 
-    public function getUpdatedAt() : string
+    public function getUpdatedAt() 
     {
         return $this->updated_at;
     }

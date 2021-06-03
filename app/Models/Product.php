@@ -271,4 +271,17 @@ class Product extends CoreModel {
     {
         $this->type_id = $type_id;
     }
+    public function findAllHomepage()
+    {
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT *
+            FROM product
+            LIMIT 5
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
+        
+        return $products;
+    }
 }

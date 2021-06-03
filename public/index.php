@@ -50,6 +50,110 @@ $router->map(
     ],
     'main-home'
 );
+$router->map(
+    'GET',
+    '/categories',
+    [
+        'method' => 'categories',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-categories'
+);
+$router->map(
+    'GET',
+    '/category_add',
+    [
+        'method' => 'categoryAdd',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-category_add'
+);
+$router->map(
+    'GET',
+    '/product',
+    [
+        'method' => 'product',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-product'
+);
+
+$router->map(
+    'GET',
+    '/product_add', 
+    [
+        'method' => 'productAdd',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-product_add'
+);
+
+$router->map(
+    'GET',
+    '/type', 
+    [
+        'method' => 'type',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-type'
+);
+
+$router->map(
+    'GET',
+    '/marque', 
+    [
+        'method' => 'marque',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-marque'
+);
+
+$router->map(
+    'GET',
+    '/tag', 
+    [
+        'method' => 'tag',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-tag'
+);
+
+$router->map(
+    'GET',
+    '/type_add', 
+    [
+        'method' => 'type_add',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-type_add'
+);
+
+$router->map(
+    'GET',
+    '/marque_add', 
+    [
+        'method' => 'marque_add',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-marque_add'
+);
+
+$router->map(
+    'GET',
+    '/tag_add', 
+    [
+        'method' => 'tag_add',
+        'controller' => '\App\Controllers\MainController'
+    ],
+    'main-tag_add'
+);
+
+
+
+
+
+
+
 
 
 /* -------------
