@@ -44,8 +44,13 @@ class CoreModel {
      *
      * @return  string
      */ 
-    public function getUpdatedAt() 
+    public function getUpdatedAt() : string
     {
-        return $this->updated_at;
+        if($this->updated_at !== null){
+            return $this->updated_at;
+        } else {
+            return "vide !";
+        }
+        
     }
 }

@@ -30,7 +30,7 @@ else {
     // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
     $_SERVER['BASE_URI'] = '/';
 }
-
+//dd($_SERVER);
 // On doit déclarer toutes les "routes" à AltoRouter, afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
 // On appelle cela "mapper" les routes
 // 1. méthode HTTP : GET ou POST (pour résumer)
@@ -41,6 +41,8 @@ else {
 // 4. Le nom de la route : pour identifier la route, on va suivre une convention
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
+
+// Page d'accueil
 $router->map(
     'GET',
     '/',
@@ -50,107 +52,62 @@ $router->map(
     ],
     'main-home'
 );
+
+// Liste des categories
 $router->map(
     'GET',
-    '/categories',
+    '/category/list',
     [
-        'method' => 'categories',
-        'controller' => '\App\Controllers\MainController'
+        'method' => 'list',
+        'controller' => '\App\Controllers\CategoryController'
     ],
-    'main-categories'
-);
-$router->map(
-    'GET',
-    '/category_add',
-    [
-        'method' => 'categoryAdd',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-category_add'
-);
-$router->map(
-    'GET',
-    '/product',
-    [
-        'method' => 'product',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-product'
+    'category-list'
 );
 
+// Ajout categorie
 $router->map(
     'GET',
-    '/product_add', 
+    '/category/add',
     [
-        'method' => 'productAdd',
-        'controller' => '\App\Controllers\MainController'
+        'method' => 'add',
+        'controller' => '\App\Controllers\CategoryController'
     ],
-    'main-product_add'
+    'category-add'
 );
 
+//! ammorce atelier E02
 $router->map(
-    'GET',
-    '/type', 
+    'POST',
+    '/category/add',
     [
-        'method' => 'type',
-        'controller' => '\App\Controllers\MainController'
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\CategoryController'
     ],
-    'main-type'
-);
-
-$router->map(
-    'GET',
-    '/marque', 
-    [
-        'method' => 'marque',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-marque'
-);
-
-$router->map(
-    'GET',
-    '/tag', 
-    [
-        'method' => 'tag',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-tag'
-);
-
-$router->map(
-    'GET',
-    '/type_add', 
-    [
-        'method' => 'type_add',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-type_add'
-);
-
-$router->map(
-    'GET',
-    '/marque_add', 
-    [
-        'method' => 'marque_add',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-marque_add'
-);
-
-$router->map(
-    'GET',
-    '/tag_add', 
-    [
-        'method' => 'tag_add',
-        'controller' => '\App\Controllers\MainController'
-    ],
-    'main-tag_add'
+    'category-addPost'
 );
 
 
+// Liste des produits
+$router->map(
+    'GET',
+    '/product/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-list'
+);
 
-
+// Ajout produit
+$router->map(
+    'GET',
+    '/product/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-add'
+);
 
 
 

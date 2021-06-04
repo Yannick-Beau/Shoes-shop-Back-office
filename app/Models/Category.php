@@ -5,8 +5,7 @@ namespace App\Models;
 use App\Utils\Database;
 use PDO;
 
-class Category extends CoreModel
-{
+class Category extends CoreModel {
 
     /**
      * @var string
@@ -29,7 +28,7 @@ class Category extends CoreModel
      * Get the value of name
      *
      * @return  string
-     */
+     */ 
     public function getName()
     {
         return $this->name;
@@ -39,7 +38,7 @@ class Category extends CoreModel
      * Set the value of name
      *
      * @param  string  $name
-     */
+     */ 
     public function setName(string $name)
     {
         $this->name = $name;
@@ -47,7 +46,7 @@ class Category extends CoreModel
 
     /**
      * Get the value of subtitle
-     */
+     */ 
     public function getSubtitle()
     {
         return $this->subtitle;
@@ -55,7 +54,7 @@ class Category extends CoreModel
 
     /**
      * Set the value of subtitle
-     */
+     */ 
     public function setSubtitle($subtitle)
     {
         $this->subtitle = $subtitle;
@@ -63,7 +62,7 @@ class Category extends CoreModel
 
     /**
      * Get the value of picture
-     */
+     */ 
     public function getPicture()
     {
         return $this->picture;
@@ -71,7 +70,7 @@ class Category extends CoreModel
 
     /**
      * Set the value of picture
-     */
+     */ 
     public function setPicture($picture)
     {
         $this->picture = $picture;
@@ -79,7 +78,7 @@ class Category extends CoreModel
 
     /**
      * Get the value of home_order
-     */
+     */ 
     public function getHomeOrder()
     {
         return $this->home_order;
@@ -87,7 +86,7 @@ class Category extends CoreModel
 
     /**
      * Set the value of home_order
-     */
+     */ 
     public function setHomeOrder($home_order)
     {
         $this->home_order = $home_order;
@@ -111,7 +110,7 @@ class Category extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $category = $pdoStatement->fetchObject('App\Models\Category');
+        $category = $pdoStatement->fetchObject(self::class);
 
         // retourner le résultat
         return $category;
@@ -122,13 +121,13 @@ class Category extends CoreModel
      * 
      * @return Category[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
-
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        
         return $results;
     }
 
@@ -141,14 +140,30 @@ class Category extends CoreModel
     {
         $pdo = Database::getPDO();
         $sql = '
-        SELECT *
-        FROM category
-        WHERE home_order > 0
-        ORDER BY home_order ASC
+            SELECT *
+            FROM category
+            WHERE home_order > 0
+            ORDER BY home_order ASC
         ';
         $pdoStatement = $pdo->query($sql);
-        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
-
+        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        
         return $categories;
     }
+
+
+    public static function findThreeCategories(){
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT * FROM `category` 
+            ORDER BY `id` DESC
+            LIMIT 3
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        return $results;
+    }
+
+
+
 }

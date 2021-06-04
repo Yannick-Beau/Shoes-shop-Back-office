@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>oShop BackOffice | Catégories</title>
+    <title>oShop BackOffice</title>
 
     <!-- Getting bootstrap (and reboot.css) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -20,8 +20,11 @@
     <!-- We can still have our own CSS file -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<?php
-// On inclut des sous-vues => "partials"
-include __DIR__.'/../partials/nav.tpl.php';
-?>
+
+    <?php
+    include __DIR__ . '/../partials/nav.tpl.php';
+    ?>
+
+    <div class="container my-4">

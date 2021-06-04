@@ -72,9 +72,21 @@ class Product extends CoreModel {
 
         // fetchObject() pour récupérer un seul résultat
         // si j'en avais eu plusieurs => fetchAll
-        $result = $pdoStatement->fetchObject('App\Models\Product');
+        $result = $pdoStatement->fetchObject(self::class);
         
         return $result;
+    }
+
+    public static function findThreeProducts(){
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT * FROM `product` 
+            ORDER BY `id` DESC
+            LIMIT 3
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        return $results;
     }
 
     /**
@@ -82,7 +94,7 @@ class Product extends CoreModel {
      * 
      * @return Product[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
@@ -270,18 +282,5 @@ class Product extends CoreModel {
     public function setTypeId(int $type_id)
     {
         $this->type_id = $type_id;
-    }
-    public function findAllHomepage()
-    {
-        $pdo = Database::getPDO();
-        $sql = '
-            SELECT *
-            FROM product
-            LIMIT 5
-        ';
-        $pdoStatement = $pdo->query($sql);
-        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
-        
-        return $products;
     }
 }
