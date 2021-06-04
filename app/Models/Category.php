@@ -144,7 +144,7 @@ class Category extends CoreModel
         SELECT *
         FROM category
         WHERE home_order > 0
-        ORDER BY name ASC
+        ORDER BY home_order ASC
         ';
         $pdoStatement = $pdo->query($sql);
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
