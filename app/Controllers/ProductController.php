@@ -27,7 +27,14 @@ class ProductController extends CoreController {
      */
     public function add()
     {
+
         $this->show('product/add');
+    }
+
+    public function addPost(){
+        $product = new Product;
+        $viewVars = ['product' => $product];
+        $this->show('product/add', $viewVars );
     }
 
 

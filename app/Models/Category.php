@@ -170,7 +170,20 @@ class Category extends CoreModel {
             INSERT INTO category (name, subtitle, picture, home_order, created_at)
             VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}', '{$this->home_order}', '{$this->created_at}')
         ";
-        $pdo->exec($sql);
+        $insertedRows = $pdo->exec($sql);
+
+        // Si au moins une ligne ajoutée
+        if ($insertedRows > 0) {
+            // Alors on récupère l'id auto-incrémenté généré par MySQL
+            $this->id = $pdo->lastInsertId();
+
+            // On retourne VRAI car l'ajout a parfaitement fonctionné
+            return true;
+            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+        }
+        
+        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+        return false;
     }
 
 

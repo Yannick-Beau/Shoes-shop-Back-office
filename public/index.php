@@ -78,7 +78,7 @@ $router->map(
 //! ammorce atelier E02
 $router->map(
     'POST',
-    '/category/add',
+    '/category/addg',
     [
         'method' => 'addPost',
         'controller' => '\App\Controllers\CategoryController'

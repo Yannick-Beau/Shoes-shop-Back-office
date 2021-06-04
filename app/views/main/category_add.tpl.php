@@ -17,7 +17,7 @@ echo $date->getTimestamp(); ?>
 
     <form action="" method="POST" class="mt-5">
         <div class="form-group">
-            <label for="name">Nom</label>
+            <label for="name">c'est tous cassé</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie">
         </div>
         <div class="form-group">
