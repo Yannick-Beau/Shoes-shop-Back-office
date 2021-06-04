@@ -53,4 +53,18 @@ class CoreModel {
         }
         
     }
+
+    /**
+     * Set the value of created_at
+     *
+     * @param  string  $created_at
+     *
+     * @return  self
+     */ 
+    public function setCreatedAt(string $created_at)
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
 }

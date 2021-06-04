@@ -164,6 +164,14 @@ class Category extends CoreModel {
         return $results;
     }
 
+    public function addCategory() {
+        $pdo = Database::getPDO();
+        $sql = "
+            INSERT INTO category (name, subtitle, picture, home_order, created_at)
+            VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}', '{$this->home_order}', '{$this->created_at}')
+        ";
+        $pdo->exec($sql);
+    }
 
 
 }

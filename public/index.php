@@ -109,6 +109,16 @@ $router->map(
     'product-add'
 );
 
+$router->map(
+    'POST',
+    '/product/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-addPost'
+);
+
 
 
 

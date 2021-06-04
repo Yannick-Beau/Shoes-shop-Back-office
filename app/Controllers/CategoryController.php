@@ -26,8 +26,9 @@ class CategoryController extends CoreController {
     }
 
     public function addPost(){
-        echo "j'ai validé mon form YATA";
-        dd($_POST);
+        $category = new Category;
+        $viewVars = ['category' => $category];
+        $this->show('category/add', $viewVars );
     }
 
     /**
