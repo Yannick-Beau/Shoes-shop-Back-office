@@ -108,7 +108,7 @@ class Product extends CoreModel {
         $pdo = Database::getPDO();
         $sql = "
             INSERT INTO product (name, description, picture, price, rate, status, created_at, brand_id, category_id, type_id)
-            VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', '{$this->price}', '{$this->rate}', '{$this->status}', '{$this->created_at}''{$this->brand_id}','{$this->category_id}','{$this->type_id}')
+            VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', '{$this->price}', '{$this->rate}', '{$this->status}', '{$this->created_at}','{$this->brand_id}','{$this->category_id}','{$this->type_id}')
         ";
         $insertedRows = $pdo->exec($sql);
 

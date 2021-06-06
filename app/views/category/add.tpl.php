@@ -1,31 +1,42 @@
 <?php 
 
 if(!empty($_POST)){
-    $erreurForm = false;
-    $homeOrder = $_POST['homeOrder'];
- 
-    if (filter_var($homeOrder, FILTER_VALIDATE_INT) && $homeOrder >= 0 && $homeOrder <= 5) {
-        echo "Ok, c'est entre 1 et 5";
-        $category->setHomeOrder($_POST['home_order']);
-    } else {
-        echo "Pas bon !";
-    }
-
 
     $date = new DateTime();
+    $erreurForm = false;
+    
+    //On filtre $_POST['homeOrder'] pour que la valeur soit bien un int de 0 à 5 sinon on passe $erreurForm à true pour indiquer qu'un que le cahmp est incorrect
+    if (filter_var($_POST['homeOrder'], FILTER_VALIDATE_INT) === 0 && $_POST['homeOrder'] >= 0 && $_POST['homeOrder'] <= 5) {
+        $category->setHomeOrder($_POST['homeOrder']);
+    } else {
+        $erreurForm = true;
+        echo "L'ordre de la page doit être un chiffre de 0 à 5<br>";
+    }
+
+    //On filtre $_POST['picture'] pour que la valeur soit bien une url valide sinon on passe $erreurForm à true pour indiquer qu'un que le cahmp est incorrect
+    if (filter_var($_POST['picture'], FILTER_VALIDATE_URL)) {
+        $category->setPicture($_POST['picture']);
+    } else {
+        $erreurForm = true;
+        echo "L'url de l'image n'est pas valide<br>";
+    }
+
     $category->setName($_POST['name']);
     $category->setSubtitle($_POST['subtitle']);
-    $category->setPicture($_POST['picture']);
-    
     $category->setCreatedAt( $date->format('Y-m-d H:i:s') );
-    //$category->addCategory();
-    dump($category);
 
-    echo "nom : {$_POST['name']} <br>";
-    echo "sous-titre : {$_POST['subtitle']} <br>";
-    echo "image : {$_POST['picture']} <br>";
-    echo "home order : {$_POST['homeOrder']} <br>";
-    echo "date : {$date->getTimestamp()} <br>";
+    //Si $erreurForm est false c'est qu'aucune erreur n'a été détecté alors on peut exécuter la requete pour ajouter à la DB
+    //Si il n'y a pas d'erreur au moment d'inserer dans la DB alors on redirige l'utilisateur sur la liste des categories
+    if (!$erreurForm) {
+        $erreurInsert = $category->addCategory();
+        if ($erreurInsert){
+            header("Location: {$router->generate('category-list')}");
+        }
+        else {
+            echo "Une erreur c'est produit au moment d'ajouter la catégorie. Veillez vérifier les informations saisie";
+        }
+    }
+
 }
 
 ?>
