@@ -30,7 +30,7 @@ else {
     // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
     $_SERVER['BASE_URI'] = '/';
 }
-
+//dd($_SERVER);
 // On doit déclarer toutes les "routes" à AltoRouter, afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
 // On appelle cela "mapper" les routes
 // 1. méthode HTTP : GET ou POST (pour résumer)
@@ -41,6 +41,8 @@ else {
 // 4. Le nom de la route : pour identifier la route, on va suivre une convention
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
+
+// Page d'accueil
 $router->map(
     'GET',
     '/',
@@ -50,6 +52,75 @@ $router->map(
     ],
     'main-home'
 );
+
+// Liste des categories
+$router->map(
+    'GET',
+    '/category/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-list'
+);
+
+// Ajout categorie
+$router->map(
+    'GET',
+    '/category/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-add'
+);
+
+//! ammorce atelier E02
+$router->map(
+    'POST',
+    '/category/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-addPost'
+);
+
+
+// Liste des produits
+$router->map(
+    'GET',
+    '/product/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-list'
+);
+
+// Ajout produit
+$router->map(
+    'GET',
+    '/product/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-add'
+);
+
+$router->map(
+    'POST',
+    '/product/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-addPost'
+);
+
+
+
 
 
 /* -------------

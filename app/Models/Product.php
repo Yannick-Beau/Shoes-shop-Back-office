@@ -72,9 +72,77 @@ class Product extends CoreModel {
 
         // fetchObject() pour récupérer un seul résultat
         // si j'en avais eu plusieurs => fetchAll
-        $result = $pdoStatement->fetchObject('App\Models\Product');
+        $result = $pdoStatement->fetchObject(self::class);
         
         return $result;
+    }
+
+    public static function findThreeProducts(){
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT * FROM `product` 
+            ORDER BY `id` DESC
+            LIMIT 3
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        return $results;
+    }
+
+    public function insert()
+    {
+        $pdo = Database::getPDO();
+
+        $sql = "
+            INSERT INTO `product` (
+                name, 
+                description, 
+                picture,
+                price,
+                rate,
+                status,
+                brand_id,
+                category_id,
+                type_id
+            )
+            VALUES (
+                :name, 
+                :description, 
+                :picture,
+                :price,
+                :rate,
+                :status,
+                :brand_id,
+                :category_id,
+                :type_id
+            )
+        ";
+
+
+        $query = $pdo->prepare($sql);
+
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':description', $this->description, PDO::PARAM_STR);
+        $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $query->bindValue(':price', $this->price);
+        $query->bindValue(':rate', $this->rate, PDO::PARAM_INT);
+        $query->bindValue(':status', $this->status, PDO::PARAM_INT);
+        $query->bindValue(':brand_id', $this->brand_id, PDO::PARAM_INT);
+        $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
+        $query->bindValue(':type_id', $this->type_id, PDO::PARAM_INT);
+
+        $query->execute();
+
+
+        
+
+       if($query->rowCount() > 0){
+        $this->id = $pdo->lastInsertId();
+        return true;
+       }
+       // si on arrive ici, c'est qu'on a eu un pépéin
+       return false;
+
     }
 
     /**
@@ -82,7 +150,7 @@ class Product extends CoreModel {
      * 
      * @return Product[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
