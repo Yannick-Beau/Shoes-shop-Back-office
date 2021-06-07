@@ -98,7 +98,7 @@ class Category extends CoreModel {
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -220,6 +220,41 @@ class Category extends CoreModel {
        return false;
 
     }
+
+    public function update()
+    {
+        $requestUri = explode( '/', $_SERVER['REQUEST_URI'] );
+        $id = end($requestUri);
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        // Ecriture de la requête UPDATE
+        $sql = "
+            UPDATE `category`
+            SET
+               name = :name,
+               subtitle = :subtitle,
+               picture = :picture,
+               home_order = :home_order,
+               updated_at = now()
+            WHERE id = :id 
+        ";
+
+        $query = $pdo->prepare($sql);
+
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
+        $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $query->bindValue(':home_order', $this->home_order, PDO::PARAM_INT);
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+ 
+        $query->execute();
+        return true;
+    
+           
+    }
+
+    
 
 
 

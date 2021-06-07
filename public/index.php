@@ -86,6 +86,27 @@ $router->map(
     'category-addPost'
 );
 
+//modifier une categorie
+$router->map(
+    'GET',
+    '/category/edit/[i:id]',
+    [
+        'method' => 'edit',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-edit'
+);
+
+$router->map(
+    'POST',
+    '/category/edit/[i:id]',
+    [
+        'method' => 'editPost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-editPost'
+);
+
 
 // Liste des produits
 $router->map(
@@ -119,6 +140,26 @@ $router->map(
     'product-addPost'
 );
 
+//modifier un produit
+$router->map(
+    'GET',
+    '/product/edit/[i:id]',
+    [
+        'method' => 'edit',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-edit'
+);
+
+$router->map(
+    'POST',
+    '/product/edit/[i:id]',
+    [
+        'method' => 'editPost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-editPost'
+);
 
 
 
@@ -137,3 +178,4 @@ $match = $router->match();
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
 $dispatcher->dispatch();
+

@@ -54,7 +54,7 @@ class Product extends CoreModel {
      * @param int $productId ID du produit
      * @return Product
      */
-    public function find($productId)
+    public static function find($productId)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -144,6 +144,51 @@ class Product extends CoreModel {
        return false;
 
     }
+
+    public function update()
+    {
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        $requestUri = explode ( "/", $_SERVER['REQUEST_URI'] );
+        $requestId = end($requestUri);
+
+        // Ecriture de la requête UPDATE
+        $sql = "
+            UPDATE `product`
+            SET
+                name = :name, 
+                description = :description, 
+                picture = :picture,
+                price = :price,
+                rate = :rate,
+                status = :status,
+                brand_id = :brand_id,
+                category_id = :category_id,
+                type_id = :type_id,
+
+                updated_at = NOW()
+            WHERE id = :id
+        ";
+
+        $query = $pdo->prepare($sql);
+
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':description', $this->description, PDO::PARAM_STR);
+        $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $query->bindValue(':price', $this->price);
+        $query->bindValue(':rate', $this->rate, PDO::PARAM_INT);
+        $query->bindValue(':status', $this->status, PDO::PARAM_INT);
+        $query->bindValue(':brand_id', $this->brand_id, PDO::PARAM_INT);
+        $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
+        $query->bindValue(':type_id', $this->type_id, PDO::PARAM_INT);
+        $query->bindValue(':id', $requestId, PDO::PARAM_INT);
+
+        $query->execute();
+
+        return true;
+    }
+
 
     /**
      * Méthode permettant de récupérer tous les enregistrements de la table product
