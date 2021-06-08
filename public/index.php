@@ -75,7 +75,7 @@ $router->map(
     'category-add'
 );
 
-//! ammorce atelier E02
+// Ajout categorie POST
 $router->map(
     'POST',
     '/category/add',
@@ -86,26 +86,42 @@ $router->map(
     'category-addPost'
 );
 
-//modifier une categorie
+// Update categorie
+//! route dynamique 
 $router->map(
     'GET',
-    '/category/edit/[i:id]',
+    '/category/update/[i:id]',
     [
-        'method' => 'edit',
+        'method' => 'update',
         'controller' => '\App\Controllers\CategoryController'
     ],
-    'category-edit'
+    'category-update'
 );
 
+// Update categorie post
+//! route dynamique 
 $router->map(
     'POST',
-    '/category/edit/[i:id]',
+    '/category/update/[i:id]',
     [
-        'method' => 'editPost',
+        'method' => 'updatePost',
         'controller' => '\App\Controllers\CategoryController'
     ],
-    'category-editPost'
+    'category-updatePost'
 );
+
+// Delete categorie
+//! route dynamique 
+$router->map(
+    'GET',
+    '/category/delete/[i:id]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-delete'
+);
+
 
 
 // Liste des produits
@@ -140,26 +156,6 @@ $router->map(
     'product-addPost'
 );
 
-//modifier un produit
-$router->map(
-    'GET',
-    '/product/edit/[i:id]',
-    [
-        'method' => 'edit',
-        'controller' => '\App\Controllers\ProductController'
-    ],
-    'product-edit'
-);
-
-$router->map(
-    'POST',
-    '/product/edit/[i:id]',
-    [
-        'method' => 'editPost',
-        'controller' => '\App\Controllers\ProductController'
-    ],
-    'product-editPost'
-);
 
 
 
@@ -170,6 +166,7 @@ $router->map(
 
 // On demande à AltoRouter de trouver une route qui correspond à l'URL courante
 $match = $router->match();
+//dd($match);
 
 // Ensuite, pour dispatcher le code dans la bonne méthode, du bon Controller
 // On délègue à une librairie externe : https://packagist.org/packages/benoclock/alto-dispatcher
@@ -178,4 +175,3 @@ $match = $router->match();
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
 $dispatcher->dispatch();
-

@@ -66,12 +66,17 @@ if(!empty($errorList)){
         <?php 
         //TODO IL VA NOUS FALLOIR DYNAMISER CETTE LISTE !
         ?>
+
+
         <div class="form-group">
             <label for="category">Catégorie</label>
             <select class="custom-select" id="category" name="category_id" aria-describedby="categoryHelpBlock" value="">
-                <option value="1">Détente</option>
-                <option value="2">Au travail</option>
-                <option value="3">Cérémonie</option>
+                
+                <?php foreach($categories as $categorie):?>
+                    <option value="<?=$categorie->getId()?>"><?=$categorie->getName()?></option>
+                <?php endforeach ?>
+
+
             </select>
             <small id="categoryHelpBlock" class="form-text text-muted">
                 La catégorie du produit 
@@ -82,9 +87,11 @@ if(!empty($errorList)){
         <div class="form-group">
             <label for="brand">Marque</label>
             <select  class="custom-select" id="brand" name="brand_id" aria-describedby="brandHelpBlock" value="">
-                <option value="1">oCirage</option>
-                <option value="2">BOOTstrap</option>
-                <option value="3">Talonette</option>
+                
+            <?php foreach($brands as $brand):?>  
+                <option value="<?= $brand->getId()?>"><?= $brand->getName()?></option>
+            <?php endforeach; ?>
+
             </select>
             <small id="brandHelpBlock" class="form-text text-muted">
                 La marque du produit 
@@ -95,9 +102,11 @@ if(!empty($errorList)){
         <div class="form-group">
             <label for="type">Type</label>
             <select class="custom-select" id="type" name="type_id" aria-describedby="typeHelpBlock" value="">
-                <option value="1">Chaussures de ville</option>
-                <option value="2">Chaussures de sport</option>
-                <option value="3">Tongs</option>
+                
+             
+                <?php foreach($types as $type): ?>
+                    <option value="<?=$type->getId()?>"><?=$type->getName()?></option>
+                <?php endforeach;?>
             </select>
             <small id="typeHelpBlock" class="form-text text-muted">
                 Le type de produit 

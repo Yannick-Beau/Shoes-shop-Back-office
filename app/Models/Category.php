@@ -221,22 +221,20 @@ class Category extends CoreModel {
 
     }
 
-    public function update($id)
+
+    public function update()
     {
-        
-        // Récupération de l'objet PDO représentant la connexion à la DB
+
         $pdo = Database::getPDO();
 
-        // Ecriture de la requête UPDATE
         $sql = "
-            UPDATE `category`
-            SET
-               name = :name,
-               subtitle = :subtitle,
-               picture = :picture,
-               home_order = :home_order,
-               updated_at = now()
-            WHERE id = :id 
+            UPDATE `category` 
+            SET 
+                `name` = :name,
+                `subtitle` = :subtitle,
+                `picture` = :picture,
+                `updated_at` = NOW()
+            WHERE `id` = :id
         ";
 
         $query = $pdo->prepare($sql);
@@ -244,19 +242,39 @@ class Category extends CoreModel {
         $query->bindValue(':name', $this->name, PDO::PARAM_STR);
         $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
         $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
-        $query->bindValue(':home_order', $this->home_order, PDO::PARAM_INT);
-        $query->bindValue(':id', $id, PDO::PARAM_INT);
- 
-        $query->execute();
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        return $query->rowCount() > 0;
-        
-    
-           
+        $query->execute();
+        // On retourne VRAI, si au moins une ligne modifiée ! 
+        // la condition ci dessous va etre "replacée" par true ou false ! 
+        return ($query->rowCount() > 0);
+   
+
     }
 
-    
+    public function delete()
+    {
+       
+        $pdo = Database::getPDO();
+
+        $sql = "
+            DELETE FROM `category` 
+            WHERE `id` = :id
+        ";
+
+        $query = $pdo->prepare($sql);
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        $query->execute();
+        // On retourne VRAI, si au moins une ligne modifiée ! 
+        // la condition ci dessous va etre "replacée" par true ou false ! 
+        return ($query->rowCount() > 0); 
+    }
+
 
 
 
 }
+
+
+

@@ -4,7 +4,7 @@ namespace App\Models;
 
 // Classe mère de tous les Models
 // On centralise ici toutes les propriétés et méthodes utiles pour TOUS les Models
-class CoreModel {
+abstract class CoreModel {
     /**
      * @var int
      */
@@ -17,6 +17,18 @@ class CoreModel {
      * @var string
      */
     protected $updated_at;
+
+    //! TOUS LES ENFANTS DE COREMODELS DOIVENT
+    //! OBLIGATOIREMENT
+    //! AVOIR DES METHODES find($id), findAll(), insert() ...etc.
+
+    abstract static public function find($id);
+    abstract static public function findAll();
+    abstract public function insert();
+    abstract public function update();
+    abstract public function delete();
+
+
 
 
     /**
@@ -53,4 +65,28 @@ class CoreModel {
         }
         
     }
+
+    public function save() 
+    {
+        // je dois choisir si je vais faire un insert() ou un update()
+        if($this->id != null){
+            return $this->update();
+        } else {
+            return $this->insert();
+        }
+
+    }
+
+
 }
+
+
+
+
+
+
+
+
+//$coreModelObject = new CoreModel;
+//echo 'je viens d\'instancier CoreModel';
+//die();
