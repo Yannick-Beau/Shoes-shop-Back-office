@@ -43,6 +43,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Sélections Accueil &amp; Footer</a>
                     </li>
+                    <li class="nav-item <?= $currentPage === 'connexion' ? 'active' : '' ?>">
+                    
+                        <a class="nav-link" href="<?= $router->generate('user-connexion') ?>">Se connecter</a>
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">

@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
-class AppUser extends CoreModel {
+use App\Utils\Database;
+use PDO;
+
+class AppUser extends CoreModel
+{
 
 
   private $email;
@@ -13,13 +17,33 @@ class AppUser extends CoreModel {
   private $status;
 
 
+  public static function findByEmail($email)
+  {
+    $pdo = Database::getPDO();
+    // écrire notre requête
+    $sql = 'SELECT * FROM `app_user` WHERE `email` = :email';
 
+    $query = $pdo->prepare($sql);
+    $query->bindValue(':email', $email, PDO::PARAM_STR);
+  
+    //$query->bindParam(':email', $email, PDO::PARAM_STR);
+    
+    $query->execute();
+
+    $user = $query->fetchObject( "App\Models\AppUser" );
+    
+    if ($query->rowCount() == 1){
+      return $user; 
+    } else {
+      return false;
+    }
+  }
   /**
    * Méthode permettant la récupération d'un model en base
    */
-  public static function find($userId)
+  public static function find($id)
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
+    // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
   }
 
   /**
@@ -27,15 +51,15 @@ class AppUser extends CoreModel {
    */
   public static function findAll()
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
+    // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
   }
 
-      /**
+  /**
    * Méthode permettant la création du model en base
    */
   public function insert()
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
+    // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
   }
 
   /**
@@ -43,7 +67,7 @@ class AppUser extends CoreModel {
    */
   public function update()
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
+    // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
   }
 
   /**
@@ -51,14 +75,14 @@ class AppUser extends CoreModel {
    */
   public function delete()
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
+    // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
   }
 
 
 
   /**
    * Get the value of email
-   */ 
+   */
   public function getEmail()
   {
     return $this->email;
@@ -68,7 +92,7 @@ class AppUser extends CoreModel {
    * Set the value of email
    *
    * @return  self
-   */ 
+   */
   public function setEmail($email)
   {
     $this->email = $email;
@@ -78,7 +102,7 @@ class AppUser extends CoreModel {
 
   /**
    * Get the value of password
-   */ 
+   */
   public function getPassword()
   {
     return $this->password;
@@ -88,7 +112,7 @@ class AppUser extends CoreModel {
    * Set the value of password
    *
    * @return  self
-   */ 
+   */
   public function setPassword($password)
   {
     $this->password = $password;
@@ -98,7 +122,7 @@ class AppUser extends CoreModel {
 
   /**
    * Get the value of firstname
-   */ 
+   */
   public function getFirstname()
   {
     return $this->firstname;
@@ -108,7 +132,7 @@ class AppUser extends CoreModel {
    * Set the value of firstname
    *
    * @return  self
-   */ 
+   */
   public function setFirstname($firstname)
   {
     $this->firstname = $firstname;
@@ -118,7 +142,7 @@ class AppUser extends CoreModel {
 
   /**
    * Get the value of lastname
-   */ 
+   */
   public function getLastname()
   {
     return $this->lastname;
@@ -128,7 +152,7 @@ class AppUser extends CoreModel {
    * Set the value of lastname
    *
    * @return  self
-   */ 
+   */
   public function setLastname($lastname)
   {
     $this->lastname = $lastname;
@@ -136,19 +160,20 @@ class AppUser extends CoreModel {
     return $this;
   }
 
+
   /**
    * Get the value of role
-   */ 
+   */
+  public function getRole()
   {
-    $this->status = $status;
-
-    return $this;
+    return $this->role;
   }
+
   /**
    * Set the value of role
    *
    * @return  self
-   */ 
+   */
   public function setRole($role)
   {
     $this->role = $role;
@@ -158,7 +183,7 @@ class AppUser extends CoreModel {
 
   /**
    * Get the value of status
-   */ 
+   */
   public function getStatus()
   {
     return $this->status;
@@ -168,7 +193,7 @@ class AppUser extends CoreModel {
    * Set the value of status
    *
    * @return  self
-   */ 
+   */
   public function setStatus($status)
   {
     $this->status = $status;
