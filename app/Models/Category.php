@@ -221,10 +221,9 @@ class Category extends CoreModel {
 
     }
 
-    public function update()
+    public function update($id)
     {
-        $requestUri = explode( '/', $_SERVER['REQUEST_URI'] );
-        $id = end($requestUri);
+        
         // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
@@ -249,7 +248,9 @@ class Category extends CoreModel {
         $query->bindValue(':id', $id, PDO::PARAM_INT);
  
         $query->execute();
-        return true;
+
+        return $query->rowCount() > 0;
+        
     
            
     }

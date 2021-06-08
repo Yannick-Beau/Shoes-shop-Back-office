@@ -104,7 +104,8 @@ class CategoryController extends CoreController {
      */
     public function add()
     {
-        $this->show('category/add');
+        $category = new Category;
+        $this->show('category/add', ['category' => $category]);
     }
 
     /**
@@ -112,13 +113,9 @@ class CategoryController extends CoreController {
      *
      * @return void
      */
-    public function edit()
+    public function edit($paramId)
     {
-        $requestUri = explode( '/', $_SERVER['REQUEST_URI'] );
-        $id = end($requestUri);
-
-        $category = new Category();
-        $category = Category::find($id);
+        $category = Category::find($paramId);
 
         $this->show('category/edit', ['category' => $category]);
     }
@@ -128,7 +125,7 @@ class CategoryController extends CoreController {
      *
      * @return void
      */
-    public function editPost()
+    public function editPost($paramId)
     {
           // récupérer les infos du formulaires
           $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
@@ -178,7 +175,7 @@ class CategoryController extends CoreController {
               // puis j'aurais fait une condition sur result 
               // if( $result === true){ ... }
           
-              if($category->update()){
+              if($category->update($paramId)){
                   // si tout se passe bien je redirige vers la liste des
                   // categories 
                   header('Location: /category/list');
