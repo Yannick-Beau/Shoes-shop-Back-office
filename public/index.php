@@ -220,6 +220,40 @@ $router->map(
     'user-loginPost'
 );
 
+// Liste des user
+$router->map(
+    'GET',
+    '/user/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-list'
+);
+
+// Ajout produit
+$router->map(
+    'GET',
+    '/user/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-add'
+);
+
+$router->map(
+    'POST',
+    '/user/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-addPost'
+);
+
+
+
 
 
 

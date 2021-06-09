@@ -19,6 +19,7 @@ class ProductController extends CoreController {
      */
     public function list()
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         $products = Product::findAll();
         $this->show('product/list', ['products' => $products]);
     }
@@ -30,6 +31,7 @@ class ProductController extends CoreController {
      */
     public function add()
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         $product = new Product();
 
         $categories = Category::findAll();
@@ -53,6 +55,7 @@ class ProductController extends CoreController {
      */
     public function addPost()  
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         // récupération des données du formulaire
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
@@ -144,6 +147,7 @@ class ProductController extends CoreController {
      */
     public function update($productId)
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         $product = Product::find($productId);
         $categories = Category::findAll();
         $brands = Brand::findAll();
@@ -163,6 +167,7 @@ class ProductController extends CoreController {
      */
     public function updatePost($productId)
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         global $router;
         // 1/ récupérer les informations du formulaire
         $name = filter_input(INPUT_POST, 'name',  FILTER_SANITIZE_STRING);
@@ -215,6 +220,7 @@ class ProductController extends CoreController {
      */
     public function delete($productId)
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         global $router;
         // On instancie un objet avec lequel nous 
         // allons récupérer les infos de la categorie voulue
