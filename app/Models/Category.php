@@ -98,7 +98,7 @@ class Category extends CoreModel {
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -110,7 +110,7 @@ class Category extends CoreModel {
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $category = $pdoStatement->fetchObject('App\Models\Category');
+        $category = $pdoStatement->fetchObject(self::class);
 
         // retourner le résultat
         return $category;
@@ -121,12 +121,12 @@ class Category extends CoreModel {
      * 
      * @return Category[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
         
         return $results;
     }
@@ -146,8 +146,135 @@ class Category extends CoreModel {
             ORDER BY home_order ASC
         ';
         $pdoStatement = $pdo->query($sql);
-        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
+        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
         
         return $categories;
     }
+
+
+    public static function findThreeCategories(){
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT * FROM `category` 
+            ORDER BY `id` DESC
+            LIMIT 3
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        return $results;
+    }
+
+
+    public function insert()
+    {
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        // Ecriture de la requête INSERT INTO (ancienne façon de faire)
+        /*
+        $sql = "
+            INSERT INTO `category` (name, subtitle, picture)
+            VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')
+        ";
+        */
+
+        $sql = "
+            INSERT INTO `category` (name, subtitle, picture)
+            VALUES (:name, :subtitle, :picture)
+        ";
+
+        // Préparation de la requête d'insertion (+ sécurisé que exec directement)
+        // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
+        //
+        // Permet de lutter contre les injections SQL
+        // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
+        // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
+
+        $query = $pdo->prepare($sql);
+        //dump($query);
+
+        // on utilise ma methode bindValue pour chaque token/jeton/placeholder
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
+        $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+
+        
+        // pour terminer j'execute la requete grace a la methode execute()
+        $query->execute();
+
+        //dump($query);
+
+        // la methode rowCount de l'objet query me permet d'obtenir le nombre
+        // de ligne qui ont été affectés par la requete précédement executée
+
+        // si au moins une ligne a été ajoutée
+       if($query->rowCount() > 0){
+        // alors on récupère l'id auto-incrémenté généré par MySQL
+        $this->id = $pdo->lastInsertId();
+        // puis je retounre true car l'ajout a parfaitement fonctionné
+        return true;
+
+       }
+
+       // si on arrive ici, c'est qu'on a eu un pépéin
+       return false;
+
+    }
+
+
+    public function update()
+    {
+
+        $pdo = Database::getPDO();
+
+        $sql = "
+            UPDATE `category` 
+            SET 
+                `name` = :name,
+                `subtitle` = :subtitle,
+                `picture` = :picture,
+                `updated_at` = NOW()
+            WHERE `id` = :id
+        ";
+
+        $pdoStatement = $pdo->prepare($sql);
+
+        $pdoStatement->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        $pdoStatement->execute();
+        // On retourne VRAI, si au moins une ligne modifiée ! 
+        // la condition ci dessous va etre "replacée" par true ou false ! 
+        return ($pdoStatement->rowCount() > 0);
+   
+
+    }
+
+    public function delete()
+    {
+       
+        $pdo = Database::getPDO();
+
+        $sql = "
+            DELETE FROM `category` 
+            WHERE `id` = :id
+        ";
+
+        $query = $pdo->prepare($sql);
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        $query->execute();
+        // On retourne VRAI, si au moins une ligne modifiée ! 
+        // la condition ci dessous va etre "replacée" par true ou false ! 
+        return ($query->rowCount() > 0); 
+    }
+
+
+
+
 }
+
+
+

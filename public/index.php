@@ -1,5 +1,7 @@
 <?php
 
+
+
 // POINT D'ENTRÉE UNIQUE : 
 // FrontController
 
@@ -7,6 +9,9 @@
 // autoload.php permet de charger d'un coup toutes les dépendances installées avec composer
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
 require_once '../vendor/autoload.php';
+
+// tout en hat de mon fichier, mais apres mon require autoload
+session_start();
 
 /* ------------
 --- ROUTAGE ---
@@ -30,7 +35,7 @@ else {
     // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
     $_SERVER['BASE_URI'] = '/';
 }
-
+//dd($_SERVER);
 // On doit déclarer toutes les "routes" à AltoRouter, afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
 // On appelle cela "mapper" les routes
 // 1. méthode HTTP : GET ou POST (pour résumer)
@@ -41,6 +46,8 @@ else {
 // 4. Le nom de la route : pour identifier la route, on va suivre une convention
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
+
+// Page d'accueil
 $router->map(
     'GET',
     '/',
@@ -51,6 +58,171 @@ $router->map(
     'main-home'
 );
 
+// Liste des categories
+$router->map(
+    'GET',
+    '/category/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-list'
+);
+
+// Ajout categorie
+$router->map(
+    'GET',
+    '/category/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-add'
+);
+
+// Ajout categorie POST
+$router->map(
+    'POST',
+    '/category/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-addPost'
+);
+
+// Update categorie
+//! route dynamique 
+$router->map(
+    'GET',
+    '/category/update/[i:id]',
+    [
+        'method' => 'update',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-update'
+);
+
+// Update categorie post
+//! route dynamique 
+$router->map(
+    'POST',
+    '/category/update/[i:id]',
+    [
+        'method' => 'updatePost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-updatePost'
+);
+
+// Delete categorie
+//! route dynamique 
+$router->map(
+    'GET',
+    '/category/delete/[i:id]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-delete'
+);
+
+
+
+// Liste des produits
+$router->map(
+    'GET',
+    '/product/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-list'
+);
+
+// Ajout produit
+$router->map(
+    'GET',
+    '/product/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-add'
+);
+
+$router->map(
+    'POST',
+    '/product/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-addPost'
+);
+
+
+// Update produit
+//! route dynamique 
+$router->map(
+    'GET',
+    '/product/update/[i:id]',
+    [
+        'method' => 'update',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-update'
+);
+
+// Update Product post
+//! route dynamique 
+$router->map(
+    'POST',
+    '/product/update/[i:id]',
+    [
+        'method' => 'updatePost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-updatePost'
+);
+
+// Delete Product
+//! route dynamique 
+$router->map(
+    'GET',
+    '/product/delete/[i:id]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-delete'
+);
+
+// user Login, formulaire
+$router->map(
+    'GET',
+    '/login',
+    [
+        'method' => 'login',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-login'
+);
+
+// user login, traitement données du formulaire
+$router->map(
+    'POST',
+    '/login',
+    [
+        'method' => 'loginPost',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-loginPost'
+);
+
+
+
+
 
 /* -------------
 --- DISPATCH ---
@@ -58,6 +230,7 @@ $router->map(
 
 // On demande à AltoRouter de trouver une route qui correspond à l'URL courante
 $match = $router->match();
+//dd($match);
 
 // Ensuite, pour dispatcher le code dans la bonne méthode, du bon Controller
 // On délègue à une librairie externe : https://packagist.org/packages/benoclock/alto-dispatcher
