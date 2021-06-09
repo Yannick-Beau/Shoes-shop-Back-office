@@ -17,18 +17,20 @@ class UserController extends CoreController
 
     public function connexionPost()
     {
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $password = filter_input(INPUT_POST, 'password');
 
 
         $user = AppUser::findByEmail($email);
         if ($user === false) {
-            $viewVars = ['error' => "erreur d'email"];
+            $viewVars = ['error' => "erreur de connexion"];
         } else {
-            if ($password == $user->getPassword()) {
+            if (password_verify($password,$user->getPassword)) {
+                $_SESSION['userObject'] = $user;
+                $_SESSION['userId'] = $user->getId();
                 $viewVars = ['user' => $user];
             } else {
-                $viewVars = ['error' => "erreur de mot de passe"];
+                $viewVars = ['error' => "erreur de connexion"];
             }
         }
 

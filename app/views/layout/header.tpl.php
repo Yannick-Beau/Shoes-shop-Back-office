@@ -25,6 +25,7 @@
 
     <?php
     include __DIR__ . '/../partials/nav.tpl.php';
+    dump($_SESSION);
     ?>
 
     <div class="container my-4">

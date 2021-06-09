@@ -24,7 +24,7 @@ class AppUser extends CoreModel
     $sql = 'SELECT * FROM `app_user` WHERE `email` = :email';
 
     $query = $pdo->prepare($sql);
-    $query->bindValue(':email', $email, PDO::PARAM_STR);
+    $query->bindValue(':email', $email);
   
     //$query->bindParam(':email', $email, PDO::PARAM_STR);
     
@@ -32,11 +32,8 @@ class AppUser extends CoreModel
 
     $user = $query->fetchObject( "App\Models\AppUser" );
     
-    if ($query->rowCount() == 1){
-      return $user; 
-    } else {
-      return false;
-    }
+
+    return $user; 
   }
   /**
    * Méthode permettant la récupération d'un model en base

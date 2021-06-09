@@ -6,24 +6,16 @@ if(!empty($errorList)){
 if(isset($user))
 {
     echo "connexion réussi";
+    
+    
 } else 
 {
-    echo $error;
+    if (isset($error)) {
+        echo $error;
+    }
 }
 ?>
 
-
-
-<?php
-
-session_start();
-
-
-
-
-$_SESSION['prenom'] = 'MikaBuche';
-
-?>
         <h2>Connexion</h2>
         
         <form action="" method="POST" class="mt-5">
