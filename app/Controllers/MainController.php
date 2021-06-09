@@ -17,7 +17,7 @@ class MainController extends CoreController {
      */
     public function home()
     {
-        $this->checkAuthorization(['catalog-manager']);
+        $this->checkAuthorization(['catalog-manager', 'admin']);
 
         // On appelle la méthode show() de l'objet courant
         // En argument, on fournit le fichier de Vue

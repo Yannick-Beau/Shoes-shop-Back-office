@@ -15,6 +15,7 @@ class CategoryController extends CoreController {
      */
     public function list()
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         // transmettre a la vue la liste des categories.
         $categories = Category::findAll();
 
@@ -28,6 +29,7 @@ class CategoryController extends CoreController {
 
     public function addPost()
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         // récupérer les infos du formulaires
         $name = filter_input(INPUT_POST, 'name');
         $subtitle = filter_input(INPUT_POST, 'subtitle', FILTER_SANITIZE_STRING);
@@ -105,6 +107,7 @@ class CategoryController extends CoreController {
      */
     public function add()
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         // ici je viens fabriquer un objet "vide" que je vais transmettre a la vue
         // pour que $category existe bien dans add.tpl.php
         // ce qui nous evite l'apparition d'erreurs
@@ -118,6 +121,7 @@ class CategoryController extends CoreController {
      */
     public function update($categoryId)
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         $category =  Category::find($categoryId);
         $this->show('category/add', ['category' => $category]);
 
@@ -126,7 +130,7 @@ class CategoryController extends CoreController {
 
     public function updatePost($categoryId)
     {
-
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         // attention ceci n'est pas une bonne pratique 
         global $router;
 
@@ -156,6 +160,7 @@ class CategoryController extends CoreController {
 
     public function delete($categoryId)
     {
+        $this->checkAuthorization(['catalog-manager', 'admin']);
         global $router;
         $category = Category::find($categoryId);
 
