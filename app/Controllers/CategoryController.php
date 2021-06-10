@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\Category;
 
 // Si j'ai besoin du Model Category
 // use App\Models\Category;
 
-class CategoryController extends CoreController {
+class CategoryController extends CoreController
+{
 
     /**
      * Liste des catégories
@@ -20,7 +22,7 @@ class CategoryController extends CoreController {
 
         // sur la ligne ci dessous, plutot que de fabriquer une petite boite de rangement (tableau associatif) que je vais donner a ma vue grâce au deuxieme argument de la methode show, 
         //! je fabrique DIRECTEMENT la petite boite a la place du deuxieme argument
-        
+
 
         $this->show('category/list', ['categories' => $categories]);
     }
@@ -37,25 +39,25 @@ class CategoryController extends CoreController {
         // je fabrique un tableau qui va me permetre de stoquer les eventuelles erreurs
         $errorList = [];
 
-        if(empty($name)){
+        if (empty($name)) {
             $errorList[] = 'Le nom est vide';
         }
 
-        if(empty($subtitle)){
+        if (empty($subtitle)) {
             $errorList[] = 'La description est vide';
         }
 
-        if(empty($picture)){
+        if (empty($picture)) {
             $errorList[] = 'L\'image est vide';
         }
 
-        if($picture === false){
+        if ($picture === false) {
             $errorList[] = 'L\'URL d\'image est invalide';
         }
 
         // si je n'ai aucune erreur, on peut se permetre d'ajouter
         // l'entrée en BDD
-        if(empty($errorList)){
+        if (empty($errorList)) {
             // je veux ajouter l'entrée en BDD
             // je fabrique un objet a partir du model Category
             $category = new Category();
@@ -64,18 +66,18 @@ class CategoryController extends CoreController {
             $category->setSubtitle($subtitle);
             $category->setPicture($picture);
 
-            
+
             // la methode insert va renvyer true si tout s'est bien passé
             // ci dessous je pourrais passer par une variable intermédiaire
             // $result = $category->insert()
             // puis j'aurais fait une condition sur result 
             // if( $result === true){ ... }
-        
-            if($category->save()){
+
+            if ($category->save()) {
                 // si tout se passe bien je redirige vers la liste des
                 // categories 
                 header('Location: /category/list');
-            }else{
+            } else {
                 // dans ce else, la methode insert nous a renvoyé false
                 // on a donc eu un pépin lors de l'ajout en BDD.
                 $errorList[] = 'La sauvegarde a échoué';
@@ -84,7 +86,7 @@ class CategoryController extends CoreController {
 
 
         // si on a eu une erreur sur la route
-        if(!empty($errorList)){
+        if (!empty($errorList)) {
             // j'affiche la vue category/add en lui transmettant
             // la liste des erreurs !  
             $this->show('category/add', ['errorList' => $errorList]);
@@ -121,7 +123,6 @@ class CategoryController extends CoreController {
     {
         $category =  Category::find($categoryId);
         $this->show('category/add', ['category' => $category]);
-
     }
 
 
@@ -144,15 +145,13 @@ class CategoryController extends CoreController {
         $category->setSubtitle($subtitle);
         $category->setPicture($picture);
 
-        if($category->save()){
+        if ($category->save()) {
             // si l'update s'est bien passé ($category->update() va nous renvoyer true)
             $url = $router->generate('category-list');
-            header('Location: '.$url);
+            header('Location: ' . $url);
         } else {
             //todo afficher message d'erreur 
         }
-
-
     }
 
     public function delete($categoryId)
@@ -160,12 +159,70 @@ class CategoryController extends CoreController {
         global $router;
         $category = Category::find($categoryId);
 
-        if($category->delete()){
+        if ($category->delete()) {
             $url = $router->generate('category-list');
-            header('Location: '.$url);
+            header('Location: ' . $url);
         }
-
     }
 
+    public function homeOrder()
+    {
+        $this->generateCSRFToken();
+        $categories = Category::findAll();
+        $this->show('category/home-order', ['categories' => $categories]);
+    }
 
+    public function homeOrderPost()
+    {
+        
+        $emplacement = array_unique($_POST['emplacement']);
+        if (count($emplacement) == 5) {
+            $idEmplacement1 = $emplacement[0];
+            $idEmplacement2 = $emplacement[1];
+            $idEmplacement3 = $emplacement[2];
+            $idEmplacement4 = $emplacement[3];
+            $idEmplacement5 = $emplacement[4];
+
+            $filtervalidate1 = filter_var($idEmplacement1, FILTER_VALIDATE_INT);
+            $filtervalidate2 = filter_var($idEmplacement2, FILTER_VALIDATE_INT);
+            $filtervalidate3 = filter_var($idEmplacement3, FILTER_VALIDATE_INT);
+            $filtervalidate4 = filter_var($idEmplacement4, FILTER_VALIDATE_INT);
+            $filtervalidate5 = filter_var($idEmplacement5, FILTER_VALIDATE_INT);
+
+            if (!$filtervalidate1 || !$filtervalidate2 || !$filtervalidate3 || !$filtervalidate4 || !$filtervalidate5) {
+                $categories = Category::findAllHomepage();
+                $viewVars = [
+                'error' => 'erreur de sélection',
+                'categories' => $categories
+            ];
+                $this->show('category/home-order', $viewVars);
+            }
+        
+
+            $result = Category::updateHomeOrder($_POST['emplacement']);
+
+            if ($result) {
+                $categories = Category::findAll();
+                $viewVars = [
+                'validate' => 'Home order modifié',
+                'categories' => $categories
+            ];
+                $this->show('category/home-order', $viewVars);
+            } else {
+                $categories = Category::findAll();
+                $viewVars = [
+                'error' => 'erreur de sélection',
+                'categories' => $categories
+            ];
+                $this->show('category/home-order', $viewVars);
+            }
+        } else {
+            $categories = Category::findAll();
+                $viewVars = [
+                'error' => 'erreur de sélection',
+                'categories' => $categories
+            ];
+                $this->show('category/home-order', $viewVars);
+        }
+    }
 }

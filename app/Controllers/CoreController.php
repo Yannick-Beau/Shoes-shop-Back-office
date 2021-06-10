@@ -34,8 +34,9 @@ abstract class CoreController {
             'user-list' => ['admin'],
             'user-add' => ['admin'],
             'category-list' => ['admin'],
-            'product-list' => ['catalog-manager']
-            
+            'product-list' => ['catalog-manager'],
+            'category-homeOrder' => ['admin', 'catalog-manager'],
+            'category-homeOrderPost' => ['admin', 'catalog-manager']
         ];
 
         // est ce que la route sur laquelle je suis est une route présente
@@ -56,7 +57,8 @@ abstract class CoreController {
 
         $csrfTokenToCheckInPost = [
             'user-addPost',
-            'category-addPost'
+            'category-addPost',
+            'category-homeOrderPost'
         ];
 
         // et je viens verifier si la route sur laquelle je suis 

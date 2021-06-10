@@ -61,7 +61,7 @@
                         <a class="nav-link" href="#">Tags</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sélections Accueil &amp; Footer</a>
+                        <a class="nav-link" href="<?= $router->generate('category-homeOrder') ?>">Sélections Accueil &amp; Footer</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
