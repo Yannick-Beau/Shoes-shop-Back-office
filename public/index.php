@@ -58,6 +58,8 @@ $router->map(
     'main-home'
 );
 
+//---------------------------------------------------------
+//-------------------------- ROUTES CATGORIES --------------
 // Liste des categories
 $router->map(
     'GET',
@@ -220,7 +222,21 @@ $router->map(
     'user-loginPost'
 );
 
-// Liste des user
+
+// user Logout
+$router->map(
+    'GET',
+    '/logout',
+    [
+        'method' => 'logout',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-logout'
+);
+
+
+
+// Liste des utilisateurs
 $router->map(
     'GET',
     '/user/list',
@@ -231,7 +247,7 @@ $router->map(
     'user-list'
 );
 
-// Ajout produit
+// ajouter un utilisateur
 $router->map(
     'GET',
     '/user/add',
@@ -242,6 +258,7 @@ $router->map(
     'user-add'
 );
 
+// ajouter un utilisateur POST
 $router->map(
     'POST',
     '/user/add',
@@ -251,8 +268,6 @@ $router->map(
     ],
     'user-addPost'
 );
-
-
 
 
 

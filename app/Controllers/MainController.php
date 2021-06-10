@@ -17,12 +17,13 @@ class MainController extends CoreController {
      */
     public function home()
     {
-        $this->checkAuthorization(['catalog-manager', 'admin']);
+        
+        //$this->checkAuthorization(['catalog-manager', 'admin']);
 
         // On appelle la méthode show() de l'objet courant
         // En argument, on fournit le fichier de Vue
         // Par convention, chaque fichier de vue sera dans un sous-dossier du nom du Controller
-        
+    
         
         // c'est ici qu'on va faire appel a nos Models pour 
         // transmettre par la suite des infos a la vue ! 

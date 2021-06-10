@@ -2,72 +2,59 @@
 if(!empty($errorList)){
     dump($errorList);
 }
+//dump($category);
 ?>
 
 <a href="<?=$router->generate('user-list')?>" class="btn btn-success float-right">Retour</a>
-        <?php
-        //! On veut verifier si on ajoute ou si on modifie une
-        //! categorie ! 
-        // et nous allons adapter l'affichage du titre ET 
-        // l'ACTION DU FORMULAIRE selon l'action que nous avons choisi
-        if(!empty($user->getId())){
-            echo "<h2>Modifier l'utilisateur' : " . $user->getFirstname() . $user->getLastname() ."</h2>";
-            $route = $router->generate('user-update', ['id' => $user->getId()]);
-            
-
-        }else {
-            echo "<h2>Ajouter d'un utilisateur</h2>";
-            $route = $router->generate('user-add');
-        }
-        ?>
+       
+        <h2>Ajouter un utilisateur</h2>
         
-        <form action="" method="POST" class="mt-5">
+        <!-- 
+            Ci dessous dans le action de mon form, je viens afficher la variable $route que j'ai rempli avec l'url correspondante a la route demandée dans la condition ci-dessus.
 
+        -->
+        <form action="<?=$router->generate('user-add')?>" method="POST" class="mt-5">
+
+
+          <!-- div.form-group*5>label+input -->
+          <div class="form-group">
+            <label for="email">email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Votre email">
+        </div>
         <div class="form-group">
-            <label for="email">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Adresse e-mail" value="<?=$user->getEmail();?>">
+            <label for="pass">Password</label>
+            <input type="password" class="form-control" id="pass" name="password" placeholder="Votre mot de passe" aria-describedby="subtitleHelpBlock">
+        </div>
+        <div class="form-group">
+            <label for="firstName">FirstName</label>
+            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" aria-describedby="pictureHelpBlock">
         </div>
 
         <div class="form-group">
-            <label for="passeword">Passeword</label>
-            <input type="password" class="form-control" id="passeword" name="password" placeholder="Password" value="">
+            <label for="lirstName">LastName</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Nom de famille" aria-describedby="pictureHelpBlock">
         </div>
 
         <div class="form-group">
-            <label for="firstname">Firstname</label>
-            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Firstname" value="<?=$user->getFirstname();?>" 
-                aria-describedby="descriptionHelpBlock">
-        </div>
-
-        <div class="form-group">
-            <label for="lastname">Lastname</label>
-            <input class="form-control" id="lastname" name="lastname" placeholder="Lastname" value="<?=$user->getLastname();?>" 
-                aria-describedby="priceHelpBlock">
-        </div>
-
-        <div class="form-group">
-            <label for="role">Role</label>
-            <select class="custom-select" id="role" name="role" aria-describedby="statusHelpBlock" value="">
-            <option value="admin" <?= $user->getStatus() == 1 ? 'selected' : ''?>>Admin</option>
-                <option value="catalog-manager" <?= $user->getStatus() == 2 ? 'selected' : ''?> >Catalog-manager</option>
-                
+            <label for="role-select">Choisissez un role:</label>
+            <select name="role" id="role-select">
+                <option value="">--Votre role--</option>
+                <option value="admin">Admin</option>
+                <option value="catalog-manager">Catalog manager</option>
             </select>
-            <small id="statusHelpBlock" class="form-text text-muted">
-                Le role de l'utilisateur 
-            </small>
         </div>
 
         <div class="form-group">
-            <label for="status">Statut</label>
-            <select class="custom-select" id="status" name="status" aria-describedby="statusHelpBlock" value="">
-            <option value="1" <?= $user->getStatus() == 1 ? 'selected' : ''?>>Actif</option>
-                <option value="2" <?= $user->getStatus() == 2 ? 'selected' : ''?> >Désactivé/Bloqué</option>
-                
+            <label for="role-select">Choisissez votre status:</label>
+            <select name="status" id="status-select">
+                <option value="">--Votre status--</option>
+                <option value="1">Actif</option>
+                <option value="2">Désactivé</option>
             </select>
-            <small id="statusHelpBlock" class="form-text text-muted">
-                Le statut de l'utilisateur 
-            </small>
         </div>
+
+        <input type="text" name="token" value="<?=$_SESSION['csrfToken']?>">
+
 
             <button type="submit" class="btn btn-primary btn-block mt-5">Valider</button>
         </form>

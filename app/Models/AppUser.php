@@ -59,13 +59,12 @@ class AppUser extends CoreModel {
    */
   public static function findAll()
   {
-      // pour l'instant, la méthode ne fait rien, on l'implémente juste pour respecter les méthodes abstraites de CoreModel
-      $pdo = Database::getPDO();
-      $sql = 'SELECT * FROM `app_user`';
-      $pdoStatement = $pdo->query($sql);
-      $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
-        
-      return $results;
+    $pdo = Database::getPDO();
+    $sql = 'SELECT * FROM `app_user`';
+    $pdoStatement = $pdo->query($sql);
+    $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+    
+    return $results;
   }
 
       /**
@@ -73,44 +72,56 @@ class AppUser extends CoreModel {
    */
   public function insert()
   {
-              // Récupération de l'objet PDO représentant la connexion à la DB
-              $pdo = Database::getPDO();
+    // Récupération de l'objet PDO représentant la connexion à la DB
+    $pdo = Database::getPDO();
 
-              $sql = "
-                  INSERT INTO `app_user` (email, password, firstname, lastname, role, status)
-                  VALUES (:email, :password, :firstname, :lastname, :role, :status)
-              ";
-      
-              $query = $pdo->prepare($sql);
-              
-      
-              // on utilise ma methode bindValue pour chaque token/jeton/placeholder
-              $query->bindValue(':email', $this->email, PDO::PARAM_STR);
-              $query->bindValue(':password', $this->password, PDO::PARAM_STR);
-              $query->bindValue(':firstname', $this->firstname, PDO::PARAM_STR);
-              $query->bindValue(':lastname', $this->lastname, PDO::PARAM_STR);
-              $query->bindValue(':role', $this->role, PDO::PARAM_STR);
-              $query->bindValue(':status', $this->status, PDO::PARAM_INT);
-      
-              
-              // pour terminer j'execute la requete grace a la methode execute()
-              $query->execute();
-      
-              // la methode rowCount de l'objet query me permet d'obtenir le nombre
-              // de ligne qui ont été affectés par la requete précédement executée
-      
-              // si au moins une ligne a été ajoutée
-             if($query->rowCount() > 0){
-              // alors on récupère l'id auto-incrémenté généré par MySQL
-              $this->id = $pdo->lastInsertId();
-              // puis je retounre true car l'ajout a parfaitement fonctionné
-              return true;
-      
-             }
-             // si on arrive ici, c'est qu'on a eu un pépéin
-             return false;
-      
-  }
+    // Ecriture de la requête INSERT INTO (ancienne façon de faire)
+    /*
+    $sql = "
+        INSERT INTO `category` (name, subtitle, picture)
+        VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')
+    ";
+    */
+
+    $sql = "
+        INSERT INTO `app_user` (
+          `email`, 
+          `password`, 
+          `firstname`,
+          `lastname`,
+          `role`,
+          `status`
+          )
+        VALUES (
+          :email, 
+          :password, 
+          :firstname,
+          :lastname,
+          :role,
+          :status
+          )
+    ";
+
+    $pdoStatement = $pdo->prepare($sql);
+    // j'execute la requete
+    $success = $pdoStatement->execute([
+      ':email' => $this->email,
+      ':password' => $this->password,
+      ':firstname' => $this->firstname,
+      ':lastname' => $this->lastname,
+      ':role' => $this->role,
+      ':status' => $this->status,
+    ]);
+
+    // mise a jour de l'id du model
+    if($success){
+      $this->id = $pdo->lastInsertId();
+    }
+
+    return true;
+
+    }
+
 
   /**
    * Méthode permettant la mise à jour du model en base
