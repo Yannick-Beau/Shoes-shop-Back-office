@@ -269,6 +269,27 @@ $router->map(
     'user-addPost'
 );
 
+//Selection acceuil & footer
+$router->map(
+    'GET',
+    '/category/home-order',
+    [
+        'method' => 'homeOrder',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-homeOrder'
+);
+
+$router->map(
+    'POST',
+    '/category/home-order',
+    [
+        'method' => 'homeOrderPost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-HomeOrderPost'
+);
+
 
 
 

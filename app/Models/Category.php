@@ -5,7 +5,10 @@ namespace App\Models;
 use App\Utils\Database;
 use PDO;
 
-class Category extends CoreModel {
+use function PHPSTORM_META\elementType;
+
+class Category extends CoreModel
+{
 
     /**
      * @var string
@@ -28,7 +31,7 @@ class Category extends CoreModel {
      * Get the value of name
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -38,7 +41,7 @@ class Category extends CoreModel {
      * Set the value of name
      *
      * @param  string  $name
-     */ 
+     */
     public function setName(string $name)
     {
         $this->name = $name;
@@ -46,7 +49,7 @@ class Category extends CoreModel {
 
     /**
      * Get the value of subtitle
-     */ 
+     */
     public function getSubtitle()
     {
         return $this->subtitle;
@@ -54,7 +57,7 @@ class Category extends CoreModel {
 
     /**
      * Set the value of subtitle
-     */ 
+     */
     public function setSubtitle($subtitle)
     {
         $this->subtitle = $subtitle;
@@ -62,7 +65,7 @@ class Category extends CoreModel {
 
     /**
      * Get the value of picture
-     */ 
+     */
     public function getPicture()
     {
         return $this->picture;
@@ -70,7 +73,7 @@ class Category extends CoreModel {
 
     /**
      * Set the value of picture
-     */ 
+     */
     public function setPicture($picture)
     {
         $this->picture = $picture;
@@ -78,7 +81,7 @@ class Category extends CoreModel {
 
     /**
      * Get the value of home_order
-     */ 
+     */
     public function getHomeOrder()
     {
         return $this->home_order;
@@ -86,7 +89,7 @@ class Category extends CoreModel {
 
     /**
      * Set the value of home_order
-     */ 
+     */
     public function setHomeOrder($home_order)
     {
         $this->home_order = $home_order;
@@ -127,7 +130,7 @@ class Category extends CoreModel {
         $sql = 'SELECT * FROM `category`';
         $pdoStatement = $pdo->query($sql);
         $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
-        
+
         return $results;
     }
 
@@ -136,7 +139,7 @@ class Category extends CoreModel {
      * 
      * @return Category[]
      */
-    public function findAllHomepage()
+    public static function findAllHomepage()
     {
         $pdo = Database::getPDO();
         $sql = '
@@ -147,12 +150,13 @@ class Category extends CoreModel {
         ';
         $pdoStatement = $pdo->query($sql);
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
-        
+
         return $categories;
     }
 
 
-    public static function findThreeCategories(){
+    public static function findThreeCategories()
+    {
         $pdo = Database::getPDO();
         $sql = '
             SELECT * FROM `category` 
@@ -198,7 +202,7 @@ class Category extends CoreModel {
         $query->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
         $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
 
-        
+
         // pour terminer j'execute la requete grace a la methode execute()
         $query->execute();
 
@@ -208,17 +212,15 @@ class Category extends CoreModel {
         // de ligne qui ont été affectés par la requete précédement executée
 
         // si au moins une ligne a été ajoutée
-       if($query->rowCount() > 0){
-        // alors on récupère l'id auto-incrémenté généré par MySQL
-        $this->id = $pdo->lastInsertId();
-        // puis je retounre true car l'ajout a parfaitement fonctionné
-        return true;
+        if ($query->rowCount() > 0) {
+            // alors on récupère l'id auto-incrémenté généré par MySQL
+            $this->id = $pdo->lastInsertId();
+            // puis je retounre true car l'ajout a parfaitement fonctionné
+            return true;
+        }
 
-       }
-
-       // si on arrive ici, c'est qu'on a eu un pépéin
-       return false;
-
+        // si on arrive ici, c'est qu'on a eu un pépéin
+        return false;
     }
 
 
@@ -248,13 +250,11 @@ class Category extends CoreModel {
         // On retourne VRAI, si au moins une ligne modifiée ! 
         // la condition ci dessous va etre "replacée" par true ou false ! 
         return ($pdoStatement->rowCount() > 0);
-   
-
     }
 
     public function delete()
     {
-       
+
         $pdo = Database::getPDO();
 
         $sql = "
@@ -268,13 +268,55 @@ class Category extends CoreModel {
         $query->execute();
         // On retourne VRAI, si au moins une ligne modifiée ! 
         // la condition ci dessous va etre "replacée" par true ou false ! 
-        return ($query->rowCount() > 0); 
+        return ($query->rowCount() > 0);
     }
 
+    public static function updateHomeOrder($idsEmplacements = [])
+    {
+        $idEmplacement1 = $idsEmplacements[0];
+        $idEmplacement2 = $idsEmplacements[1];
+        $idEmplacement3 = $idsEmplacements[2];
+        $idEmplacement4 = $idsEmplacements[3];
+        $idEmplacement5 = $idsEmplacements[4];
 
+        $pdo = Database::getPDO();
 
+        $sql = "
+                UPDATE category
+                SET home_order  = 0;
+                UPDATE category
+                SET `home_order` = 1
+                WHERE `id`= :emplacement1;
+                UPDATE category
+                SET `home_order` = 2
+                WHERE `id`= :emplacement2;
+                UPDATE category
+                SET `home_order` = 3
+                WHERE `id`= :emplacement3;
+                UPDATE category
+                SET `home_order` = 4
+                WHERE `id`= :emplacement4;
+                UPDATE category
+                SET `home_order` = 5
+                WHERE `id`= :emplacement5;
+        ";
 
+        $pdoStatement = $pdo->prepare($sql);
+
+        $pdoStatement->bindValue(':emplacement1', $idEmplacement1, PDO::PARAM_INT);
+        $pdoStatement->bindValue(':emplacement2', $idEmplacement2, PDO::PARAM_INT);
+        $pdoStatement->bindValue(':emplacement3', $idEmplacement3, PDO::PARAM_INT);
+        $pdoStatement->bindValue(':emplacement4', $idEmplacement4, PDO::PARAM_INT);
+        $pdoStatement->bindValue(':emplacement5', $idEmplacement5, PDO::PARAM_INT);
+
+        $pdoStatement->execute();
+        // On retourne VRAI, si au moins une ligne modifiée ! 
+        // la condition ci dessous va etre "replacée" par true ou false ! 
+        if($pdoStatement->rowCount() > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
-
-
-
