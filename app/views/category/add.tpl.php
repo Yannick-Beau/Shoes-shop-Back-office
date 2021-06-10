@@ -49,6 +49,9 @@ if(!empty($errorList)){
                     URL relative d'une image (jpg, gif, svg ou png) fournie sur <a href="https://benoclock.github.io/S06-images/" target="_blank">cette page</a>
                 </small>
             </div>
+
+            <input type="text" name="token" value="<?=$_SESSION['csrfToken']?>">
+
             <button type="submit" class="btn btn-primary btn-block mt-5">Valider</button>
         </form>
     

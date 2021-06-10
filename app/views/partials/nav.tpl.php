@@ -5,7 +5,15 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
 
         <div class="container">
-            <a class="navbar-brand" href="index.html">oShop</a>
+            <a class="navbar-brand" href="<?=$router->generate('main-home')?>">oShop
+            <?php 
+            if(isset($_SESSION['userId'])){
+                // si j'ai un utilisateur connecté, j'affiche son firstanme ! 
+                echo $_SESSION['userObject']->getFirstname();
+            }
+            ?>
+            
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,6 +29,18 @@
                         pour afficher active si la page demandée correspond au lien
 
                     -->
+
+                    <?php if(!isset($_SESSION['userId'])) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?=$router->generate('user-login')?>">Connexion <span class="sr-only"></span></a>
+                        </li>
+                    <?php else : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?=$router->generate('user-logout')?>">Deconnexion <span class="sr-only"></span></a>
+                        </li>
+                    <?php endif; ?>
+
+
                     <li class="nav-item <?= $currentPage === 'main/home' ? 'active' : '' ?>">
                         <a class="nav-link" href="<?= $router->generate('main-home') ?>">Accueil <span class="sr-only">(current)</span></a>
                     </li>
@@ -42,10 +62,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Sélections Accueil &amp; Footer</a>
-                    </li>
-                    <li class="nav-item <?= $currentPage === 'user/list' || $currentPage === 'user/add' ? 'active' : '' ?>">
-                    
-                        <a class="nav-link" href="<?= $router->generate('user-list') ?>">Utilisateurs</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">

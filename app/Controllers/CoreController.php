@@ -14,6 +14,86 @@ namespace App\Controllers;
 //et si ils ne l'ont pas ce n'est pas mon enfant !
 
 abstract class CoreController {
+
+
+    // ici nous sommes en train de faire un constructeur "commum" a tous les
+    // contrôleurs ! 
+    // a chaque fois que l'on va executer une methode d'un contrôleur,
+    // ce constructeur va s'executer juste avant ! 
+    public function __construct()
+    {
+        //TODO MAUVAISE PRATIQUE
+        global $match;
+        // je récupère le nom de la route sur laquelle je suis 
+        $routeName = $match['name'];
+        //dump($routeName);
+
+        // ici on vient définir notre ACL ( Acces Control List ) 
+        $acl = [
+            'main-home' => ['admin', 'catalog-manager'],
+            'user-list' => ['admin'],
+            'user-add' => ['admin'],
+            'category-list' => ['admin'],
+            'product-list' => ['catalog-manager']
+            
+        ];
+
+        // est ce que la route sur laquelle je suis est une route présente
+        // dans le tableau ACL ?
+        // array_Key_Exists me permet de verifier si une clé existe ou pas dans 
+        // un tableau associatif 
+        if(array_key_exists($routeName, $acl)){
+            // je récupère le tableau des roles autorisés
+            $authorizedRoles = $acl[$routeName];
+            $this->checkAuthorization($authorizedRoles);
+        }
+
+
+        //! suite E06 mise en place sécu CSRF
+
+        // dans ce tableau nous avons la liste des nom de routes
+        // vulnérables a la faille CSRF
+
+        $csrfTokenToCheckInPost = [
+            'user-addPost',
+            'category-addPost'
+        ];
+
+        // et je viens verifier si la route sur laquelle je suis 
+        // est présente dans le tableau des routes vulnérable a la CSRF
+        if(in_array($routeName, $csrfTokenToCheckInPost)){
+            // Si je suis sur une route vulnérable, je lance la methode
+            // checkCSRFToken() qui va me permettre de vérifier 
+            // si le token dans le formulaire correspond bien
+            // au token en session ! 
+            $this->checkCSRFToken();
+        }
+
+
+    }
+
+
+    public function checkCSRFToken()
+    {
+        // est ce que le token qui est en transit dans le formulaire
+        // correspond bien au token que j'ai gardé dans mon "coffre fort" (en SESSION)
+        $postToken = filter_input(INPUT_POST, 'token');
+        $sessionToken = $_SESSION['csrfToken'];
+
+        if(empty($postToken) || empty($sessionToken) || $sessionToken != $postToken){
+            //si le token dans le forumlaire est vide OU
+            // si le token en session est vide OU
+            // si les tokens ne sont pas egaux
+            // alors on a un pépin ! 
+            http_response_code(403);
+            $this->show('error/err403');
+            exit();
+        } 
+
+    }
+
+
+
     /**
      * Méthode permettant d'afficher du code HTML en se basant sur les views
      *
@@ -91,6 +171,24 @@ abstract class CoreController {
         }
 
     }
+
+
+
+
+    public function generateCSRFToken()
+    {
+        $bytes = random_bytes(5);
+        $csrfToken = bin2hex($bytes);
+        // petit mécanisme gourmand craquant pour générer
+        // 10 caractères de manière aléatoire. (qui vont contenir chiffres de 0 à 9 et lettres de a à f)
+
+        $_SESSION['csrfToken'] = $csrfToken;
+        return $csrfToken;
+        
+    }
+
+
+
 
 }
 
