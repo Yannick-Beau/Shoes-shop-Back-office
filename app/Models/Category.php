@@ -235,6 +235,7 @@ class Category extends CoreModel
                 `name` = :name,
                 `subtitle` = :subtitle,
                 `picture` = :picture,
+                `home_order` = :home_order,
                 `updated_at` = NOW()
             WHERE `id` = :id
         ";
@@ -244,6 +245,7 @@ class Category extends CoreModel
         $pdoStatement->bindValue(':name', $this->name, PDO::PARAM_STR);
         $pdoStatement->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
         $pdoStatement->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':home_order', $this->home_order, PDO::PARAM_INT);
         $pdoStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         $pdoStatement->execute();
@@ -271,52 +273,17 @@ class Category extends CoreModel
         return ($query->rowCount() > 0);
     }
 
-    public static function updateHomeOrder($idsEmplacements = [])
+    public static function resetHomeOrder()
     {
-        $idEmplacement1 = $idsEmplacements[0];
-        $idEmplacement2 = $idsEmplacements[1];
-        $idEmplacement3 = $idsEmplacements[2];
-        $idEmplacement4 = $idsEmplacements[3];
-        $idEmplacement5 = $idsEmplacements[4];
-
         $pdo = Database::getPDO();
-
-        $sql = "
-                UPDATE category
-                SET home_order  = 0;
-                UPDATE category
-                SET `home_order` = 1
-                WHERE `id`= :emplacement1;
-                UPDATE category
-                SET `home_order` = 2
-                WHERE `id`= :emplacement2;
-                UPDATE category
-                SET `home_order` = 3
-                WHERE `id`= :emplacement3;
-                UPDATE category
-                SET `home_order` = 4
-                WHERE `id`= :emplacement4;
-                UPDATE category
-                SET `home_order` = 5
-                WHERE `id`= :emplacement5;
-        ";
-
-        $pdoStatement = $pdo->prepare($sql);
-
-        $pdoStatement->bindValue(':emplacement1', $idEmplacement1, PDO::PARAM_INT);
-        $pdoStatement->bindValue(':emplacement2', $idEmplacement2, PDO::PARAM_INT);
-        $pdoStatement->bindValue(':emplacement3', $idEmplacement3, PDO::PARAM_INT);
-        $pdoStatement->bindValue(':emplacement4', $idEmplacement4, PDO::PARAM_INT);
-        $pdoStatement->bindValue(':emplacement5', $idEmplacement5, PDO::PARAM_INT);
-
-        $pdoStatement->execute();
-        // On retourne VRAI, si au moins une ligne modifiée ! 
-        // la condition ci dessous va etre "replacée" par true ou false ! 
-        if($pdoStatement->rowCount() > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        $sql = '
+            UPDATE `category`
+            SET `home_order` = 0
+            WHERE home_order > 0
+        ';
+        return $pdo->exec($sql);
     }
+
+     
+       
 }

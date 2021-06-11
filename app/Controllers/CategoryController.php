@@ -121,6 +121,7 @@ class CategoryController extends CoreController
      */
     public function update($categoryId)
     {
+        $this->generateCSRFToken();
         $category =  Category::find($categoryId);
         $this->show('category/add', ['category' => $category]);
     }
@@ -172,57 +173,47 @@ class CategoryController extends CoreController
         $this->show('category/home-order', ['categories' => $categories]);
     }
 
-    public function homeOrderPost()
+    public function manageHome()
     {
-        
-        $emplacement = array_unique($_POST['emplacement']);
-        if (count($emplacement) == 5) {
-            $idEmplacement1 = $emplacement[0];
-            $idEmplacement2 = $emplacement[1];
-            $idEmplacement3 = $emplacement[2];
-            $idEmplacement4 = $emplacement[3];
-            $idEmplacement5 = $emplacement[4];
+        // On va aller chercher toute les categories en BDD
+        // Grace a la classe Category et la methode findAll
+        $categories = Category::findAll();
 
-            $filtervalidate1 = filter_var($idEmplacement1, FILTER_VALIDATE_INT);
-            $filtervalidate2 = filter_var($idEmplacement2, FILTER_VALIDATE_INT);
-            $filtervalidate3 = filter_var($idEmplacement3, FILTER_VALIDATE_INT);
-            $filtervalidate4 = filter_var($idEmplacement4, FILTER_VALIDATE_INT);
-            $filtervalidate5 = filter_var($idEmplacement5, FILTER_VALIDATE_INT);
-
-            if (!$filtervalidate1 || !$filtervalidate2 || !$filtervalidate3 || !$filtervalidate4 || !$filtervalidate5) {
-                $categories = Category::findAllHomepage();
-                $viewVars = [
-                'error' => 'erreur de sélection',
-                'categories' => $categories
-            ];
-                $this->show('category/home-order', $viewVars);
-            }
-        
-
-            $result = Category::updateHomeOrder($_POST['emplacement']);
-
-            if ($result) {
-                $categories = Category::findAll();
-                $viewVars = [
-                'validate' => 'Home order modifié',
-                'categories' => $categories
-            ];
-                $this->show('category/home-order', $viewVars);
-            } else {
-                $categories = Category::findAll();
-                $viewVars = [
-                'error' => 'erreur de sélection',
-                'categories' => $categories
-            ];
-                $this->show('category/home-order', $viewVars);
-            }
-        } else {
-            $categories = Category::findAll();
-                $viewVars = [
-                'error' => 'erreur de sélection',
-                'categories' => $categories
-            ];
-                $this->show('category/home-order', $viewVars);
-        }
+        // on veut afficher la vue manage-home
+        $this->show('category/home-form', ['categories' => $categories]);
     }
+
+    public function manageHomePost()
+    {
+        //TODO MAUVAISE PRATIQUE
+        global $router;
+
+        // on récupère les données du forumulaire
+        //! ATTENTION PIEGE, les données arrivent sous la forme d'un tableau ! 
+        $emplacements = filter_input(INPUT_POST, 'emplacement', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        //$result = Category::updateHomeOrder($_POST['emplacement']);
+
+        // avant de determiner le home_order des categories choisies dans 
+        // le formulaire, je vais remettre tous les home_order a 0 
+        Category::resetHomeOrder();
+        $order = 1;
+        // je parcours mon tableau de resultats
+        foreach($emplacements as $categoryId){
+            // a chaque tour de boucle je vais récupérer la categorie
+            // qui a pour id $categoryId
+            $category = Category::find($categoryId);
+            //dump($category);
+            // je met a jour la propriété home_order
+            $category->setHomeOrder($order);
+            // j'update l'objet mis a jour en BDD
+            $category->save();
+            $order++;
+        }
+        header('Location: ' . $router->generate('category-manageHome'));
+
+    }
+
+           
+     
+    
 }

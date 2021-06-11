@@ -130,6 +130,28 @@ $router->map(
 );
 
 
+// route home-order
+$router->map(
+    'GET',
+    '/category/manage-home',
+    [
+        'method' => 'manageHome',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-manageHome'
+);
+
+// route home-order POST
+$router->map(
+    'POST',
+    '/category/manage-home',
+    [
+        'method' => 'manageHomePost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-manageHomePost'
+);
+
 
 // Liste des produits
 $router->map(
@@ -274,7 +296,7 @@ $router->map(
     'GET',
     '/category/home-order',
     [
-        'method' => 'homeOrder',
+        'method' => 'manageHome',
         'controller' => '\App\Controllers\CategoryController'
     ],
     'category-homeOrder'
@@ -284,11 +306,35 @@ $router->map(
     'POST',
     '/category/home-order',
     [
-        'method' => 'homeOrderPost',
+        'method' => 'manageHomePost',
         'controller' => '\App\Controllers\CategoryController'
     ],
     'category-HomeOrderPost'
 );
+
+//selection des tag
+$router->map(
+    'GET',
+    '/tag/select-tag',
+    [
+        'method' => 'selectTag',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'tag-selectTag'
+);
+
+$router->map(
+    'GET',
+    '/tag/select-tag',
+    [
+        'method' => 'selectTag',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'tag-selectTag'
+);
+
+
+
 
 
 
