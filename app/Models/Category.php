@@ -233,6 +233,7 @@ class Category extends CoreModel {
                 `name` = :name,
                 `subtitle` = :subtitle,
                 `picture` = :picture,
+                `home_order` = :home_order,
                 `updated_at` = NOW()
             WHERE `id` = :id
         ";
@@ -242,6 +243,7 @@ class Category extends CoreModel {
         $pdoStatement->bindValue(':name', $this->name, PDO::PARAM_STR);
         $pdoStatement->bindValue(':subtitle', $this->subtitle, PDO::PARAM_STR);
         $pdoStatement->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+        $pdoStatement->bindValue(':home_order', $this->home_order, PDO::PARAM_INT);
         $pdoStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         $pdoStatement->execute();
@@ -271,6 +273,16 @@ class Category extends CoreModel {
         return ($query->rowCount() > 0); 
     }
 
+    public static function resetHomeOrder()
+    {
+        $pdo = Database::getPDO();
+        $sql = '
+            UPDATE `category`
+            SET `home_order` = 0
+            WHERE home_order > 0
+        ';
+        return $pdo->exec($sql);
+    }
 
 
 

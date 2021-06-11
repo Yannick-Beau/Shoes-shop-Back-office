@@ -1,4 +1,7 @@
 <?php 
+dump($product->getTags());
+
+
 if(!empty($errorList)){
     dump($errorList);
 }

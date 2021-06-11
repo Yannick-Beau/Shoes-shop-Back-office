@@ -34,7 +34,7 @@ abstract class CoreController {
             'user-list' => ['admin'],
             'user-add' => ['admin'],
             'category-list' => ['admin'],
-            'product-list' => ['catalog-manager']
+            'product-list' => ['admin', 'catalog-manager']
             
         ];
 

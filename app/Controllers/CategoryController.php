@@ -119,6 +119,7 @@ class CategoryController extends CoreController {
      */
     public function update($categoryId)
     {
+        $this->generateCSRFToken();
         $category =  Category::find($categoryId);
         $this->show('category/add', ['category' => $category]);
 
@@ -167,5 +168,42 @@ class CategoryController extends CoreController {
 
     }
 
+    public function manageHome()
+    {
+        // On va aller chercher toute les categories en BDD
+        // Grace a la classe Category et la methode findAll
+        $categories = Category::findAll();
+
+        // on veut afficher la vue manage-home
+        $this->show('category/home-form', ['categories' => $categories]);
+    }
+
+    public function manageHomePost()
+    {
+        //TODO MAUVAISE PRATIQUE
+        global $router;
+
+        // on récupère les données du forumulaire
+        //! ATTENTION PIEGE, les données arrivent sous la forme d'un tableau ! 
+        $emplacements = filter_input(INPUT_POST, 'emplacement', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        // avant de determiner le home_order des categories choisies dans 
+        // le formulaire, je vais remettre tous les home_order a 0 
+        Category::resetHomeOrder();
+        $order = 1;
+        // je parcours mon tableau de resultats
+        foreach($emplacements as $categoryId){
+            // a chaque tour de boucle je vais récupérer la categorie
+            // qui a pour id $categoryId
+            $category = Category::find($categoryId);
+            //dump($category);
+            // je met a jour la propriété home_order
+            $category->setHomeOrder($order);
+            // j'update l'objet mis a jour en BDD
+            $category->save();
+            $order++;
+        }
+        header('Location: ' . $router->generate('category-manageHome'));
+
+    }
 
 }

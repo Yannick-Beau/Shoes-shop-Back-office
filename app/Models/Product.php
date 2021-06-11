@@ -160,6 +160,12 @@ class Product extends CoreModel {
         return $results;
     }
 
+    public function getTags()
+    {
+        $tags = Tag::findAllByProductId($this->id);
+        return $tags;
+    }
+
     public function update()
     {
         $pdo = Database::getPDO();

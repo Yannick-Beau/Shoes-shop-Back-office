@@ -130,6 +130,28 @@ $router->map(
 );
 
 
+// route home-order
+$router->map(
+    'GET',
+    '/category/manage-home',
+    [
+        'method' => 'manageHome',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-manageHome'
+);
+
+// route home-order POST
+$router->map(
+    'POST',
+    '/category/manage-home',
+    [
+        'method' => 'manageHomePost',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-manageHomePost'
+);
+
 
 // Liste des produits
 $router->map(
@@ -268,6 +290,9 @@ $router->map(
     ],
     'user-addPost'
 );
+
+
+
 
 
 
