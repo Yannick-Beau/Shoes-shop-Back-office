@@ -57,17 +57,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Marques</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Tags</a>
+                    <li class="nav-item" <?= $currentPage === 'tag/add-bind' || $currentPage === 'tag/list' ? 'active' : '' ?>>
+                        <a class="nav-link" href="<?= $router->generate('tag-list') ?>">Tags</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= $router->generate('category-homeOrder') ?>">Sélections Accueil &amp; Footer</a>
                     </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
+                <!-- <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
                     <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Rechercher</button>
-                </form>
+                </form> -->
             </div>
         </div>
     </nav>

@@ -315,23 +315,66 @@ $router->map(
 //selection des tag
 $router->map(
     'GET',
-    '/tag/select-tag',
+    '/tag/add-bind',
     [
-        'method' => 'selectTag',
+        'method' => 'addBind',
         'controller' => '\App\Controllers\TagController'
     ],
-    'tag-selectTag'
+    'tag-addBind'
+);
+
+$router->map(
+    'POST',
+    '/tag/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'tag-addPost'
+);
+
+$router->map(
+    'POST',
+    '/tag/bind',
+    [
+        'method' => 'bindPost',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'tag-bindPost'
 );
 
 $router->map(
     'GET',
-    '/tag/select-tag',
+    '/tag/list',
     [
-        'method' => 'selectTag',
+        'method' => 'list',
         'controller' => '\App\Controllers\TagController'
     ],
-    'tag-selectTag'
+    'tag-list'
 );
+
+$router->map(
+    'GET',
+    '/tag/delete/[i:id]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'Tag-delete'
+);
+
+$router->map(
+    'GET',
+    '/tag/unbind/[i:idProduct]/[i:idTag]',
+    [
+        'method' => 'unbind',
+        'controller' => '\App\Controllers\TagController'
+    ],
+    'tag-unbind'
+);
+
+
+
 
 
 
